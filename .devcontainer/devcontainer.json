@@ -1,0 +1,12 @@
+{
+    "name": "image-crauler-with-gin",
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "workspace",
+    "workspaceFolder": "/usr/src/myapp",
+    "settings": {
+        "editor.tabSize": 4
+    },
+    "shutdownAction": "stopCompose"
+}

@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+    workspace:
+        image: golang
+        command: sleep infinity
+        ports:
+            - 8081:8080
+        volumes:
+            - ../:/usr/src/myapp/
