@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,10 @@ import (
 	//"fmt"
 	"io/ioutil"
 	"os"
+
+	"math/rand"
+	"mime"
+	"strconv"
 
 	_ "github.com/niisan-tokyo/image-crawler/statik"
 )
@@ -54,6 +59,12 @@ func main() {
 		c.HTML(http.StatusOK, "/scrape.tmpl", gin.H{
 			"links": p.Links,
 		})
+	})
+
+	// 画像を保存して戻る
+	r.POST("save", func(c *gin.Context) {
+		SaveImage(c.PostFormMap("urls"))
+		c.HTML(http.StatusOK, "/complete.tmpl", gin.H{})
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
@@ -108,4 +119,36 @@ func getImgSrc(e *colly.HTMLElement) string {
 	}
 
 	return e.Attr("src")
+}
+
+func SaveImage(imgs map[string]string) {
+	os.Mkdir("dist", 0777)
+	random := "dist/" + RandomString(10)
+	i := 0
+	for _, val := range imgs {
+		i++
+		response, err := http.Get(val)
+		if err != nil {
+			panic(err)
+		}
+		defer response.Body.Close()
+		ext, _ := mime.ExtensionsByType(response.Header.Get("Content-Type"))
+		name := random + strconv.Itoa(i) + ext[0]
+
+		file, err := os.Create(name)
+		if err != nil {
+			panic(err)
+		}
+		io.Copy(file, response.Body)
+	}
+}
+
+const randomLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func RandomString(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = randomLetters[rand.Intn(len(randomLetters))]
+	}
+	return string(b)
 }
