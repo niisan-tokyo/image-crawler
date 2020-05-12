@@ -25,6 +25,7 @@ type imageLinks struct {
 }
 
 func main() {
+	//gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	t, err := loadTemplate()
@@ -63,7 +64,7 @@ func main() {
 
 	// 画像を保存して戻る
 	r.POST("save", func(c *gin.Context) {
-		SaveImage(c.PostFormMap("urls"))
+		saveImage(c.PostFormMap("urls"))
 		c.HTML(http.StatusOK, "/complete.tmpl", gin.H{})
 	})
 
@@ -121,9 +122,9 @@ func getImgSrc(e *colly.HTMLElement) string {
 	return e.Attr("src")
 }
 
-func SaveImage(imgs map[string]string) {
+func saveImage(imgs map[string]string) {
 	os.Mkdir("dist", 0777)
-	random := "dist/" + RandomString(10)
+	random := "dist/" + randomString(10)
 	i := 0
 	for _, val := range imgs {
 		i++
@@ -145,7 +146,7 @@ func SaveImage(imgs map[string]string) {
 
 const randomLetters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-func RandomString(n int) string {
+func randomString(n int) string {
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = randomLetters[rand.Intn(len(randomLetters))]

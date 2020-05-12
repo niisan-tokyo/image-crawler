@@ -17,13 +17,13 @@
 
 <form action="save" method="POST">
   <button type="submit">画像を保存する</button>
-  {{range .links}}
+  {{range $key, $value := .links}}
   <div>
     <div>
       <label class="imgs">
-        <input type="checkbox" value="{{ . }}" name="urls[]" />
-        {{ . }}<br>
-        <img style="max-width: 1000px;" src="{{ . }}" />
+        <input type="checkbox" value="{{ $value }}" name="urls[{{ $key }}]" />
+        {{ $value }}<br>
+        <img style="max-width: 1000px;" src="{{ $value }}" />
       </label>
     </div>
   </div>
