@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+
+<style>
+.selected {
+  border: solid 4px;
+}
+</style>
+<body style="width: 810px;margin: auto;">
+<h1>画像スクレイピング</h1>
+<form action="scrape" method="GET">
+  <input name="url" type="text" />
+  <button type="submit">Go!!</button>
+</form>
+
+<form action="save" method="POST">
+  <button type="submit">画像を保存する</button>
+  {{range .links}}
+  <div>
+    <div>
+      <label class="imgs">
+        <input type="checkbox" value="{{ . }}" name="urls[{{ . }}]" />
+        {{ . }}<br>
+        <img style="max-width: 1000px;" src="{{ . }}" />
+      </label>
+    </div>
+  </div>
+  {{ end }}
+  <button type="submit">画像を保存する</button>
+</form>
+<script>
+elms = document.getElementsByClassName('imgs')
+for (var i=0, len = elms.length|0; i<len; i=i+1|0) {
+  var elm = elms[i]
+  elm.addEventListener('click', function(e) {
+    // e.currentTarget.parentElement.classList.toggle("selected")
+    // console.log(e.current
+    var t = e.currentTarget.childNodes[1].checked
+    console.log(e.currentTarget.childNodes[1])
+    if (t) {
+      e.currentTarget.parentNode.classList.add('selected')
+    } else {
+      e.currentTarget.parentNode.classList.remove('selected')
+    }
+  })
+}
+</script>
+</body>
+</html>
