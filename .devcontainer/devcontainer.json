@@ -8,5 +8,8 @@
     "settings": {
         "editor.tabSize": 4
     },
-    "shutdownAction": "stopCompose"
+	"shutdownAction": "stopCompose",
+	"extensions": [
+		"ms-vscode.go"
+	]
 }
