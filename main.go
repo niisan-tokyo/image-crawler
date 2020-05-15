@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io"
 	"net/http"
+	"sort"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly"
@@ -126,8 +127,10 @@ func saveImage(imgs map[string]string) {
 	os.Mkdir("dist", 0777)
 	random := "dist/" + randomString(10)
 	i := 0
-	for _, val := range imgs {
+	keys := makeSortKey(imgs)
+	for _, k := range keys {
 		i++
+		val := imgs[k]
 		response, err := http.Get(val)
 		if err != nil {
 			panic(err)
@@ -152,4 +155,13 @@ func randomString(n int) string {
 		b[i] = randomLetters[rand.Intn(len(randomLetters))]
 	}
 	return string(b)
+}
+
+func makeSortKey(imgs map[string]string) []string {
+	keys := make([]string, 0, len(imgs))
+	for k := range imgs {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
